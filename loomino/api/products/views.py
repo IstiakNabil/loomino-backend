@@ -23,11 +23,16 @@ from rest_framework.permissions import (
     AllowAny,
     IsAdminUser,
 )
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+)
 
 from drf_spectacular.utils import extend_schema
 
 from products.models import (
     Product,
+    ProductImage,
     ProductVariant,
     Category,
     Brand,
@@ -50,6 +55,8 @@ from .serializers import (
     AdminColorSerializer,
     AdminSizeSerializer,
     AdminProductVariantSerializer,
+    AdminProductImageSerializer,
+    AdminBrandSerializer,
     AdminProductVariantWriteSerializer,
 )
 
@@ -972,3 +979,150 @@ class AdminProductVariantRetrieveUpdateDestroyAPIView(
             read_serializer.data,
             status=status.HTTP_200_OK,
         )
+
+# ============================================================
+# Admin — Product Images
+# ============================================================
+
+@extend_schema(
+    tags=["Admin - Products"],
+    summary="List / upload product images",
+    description=(
+        "List product images (filter with ?product=<id>) "
+        "or upload a new image using multipart/form-data."
+    ),
+)
+class AdminProductImageListCreateAPIView(
+    generics.ListCreateAPIView
+):
+
+    serializer_class = AdminProductImageSerializer
+
+    permission_classes = [IsAdminUser]
+
+    parser_classes = (
+        MultiPartParser,
+        FormParser,
+    )
+
+    # Images are always shown as a full set per product,
+    # so pagination would only get in the way.
+    pagination_class = None
+
+    filter_backends = (
+        DjangoFilterBackend,
+        OrderingFilter,
+    )
+
+    filterset_fields = (
+        "product",
+        "image_type",
+    )
+
+    ordering_fields = (
+        "display_order",
+        "created_at",
+    )
+
+    ordering = ("display_order",)
+
+    queryset = (
+        ProductImage.objects
+        .select_related("product")
+        .all()
+    )
+
+
+@extend_schema(
+    tags=["Admin - Products"],
+    summary="Retrieve / update / delete a product image",
+)
+class AdminProductImageRetrieveUpdateDestroyAPIView(
+    generics.RetrieveUpdateDestroyAPIView
+):
+
+    serializer_class = AdminProductImageSerializer
+
+    permission_classes = [IsAdminUser]
+
+    parser_classes = (
+        MultiPartParser,
+        FormParser,
+    )
+
+    queryset = (
+        ProductImage.objects
+        .select_related("product")
+        .all()
+    )
+
+
+# ============================================================
+# Admin — Brands
+# ============================================================
+
+@extend_schema(
+    tags=["Admin - Products"],
+    summary="List / create brands",
+)
+class AdminBrandListCreateAPIView(
+    generics.ListCreateAPIView
+):
+
+    serializer_class = AdminBrandSerializer
+
+    permission_classes = [IsAdminUser]
+
+    parser_classes = (
+        MultiPartParser,
+        FormParser,
+    )
+
+    filter_backends = (
+        SearchFilter,
+        OrderingFilter,
+    )
+
+    search_fields = (
+        "name",
+        "slug",
+    )
+
+    ordering_fields = (
+        "name",
+        "created_at",
+    )
+
+    ordering = ("name",)
+
+    queryset = (
+        Brand.objects
+        .annotate(
+            product_count=Count("products")
+        )
+    )
+
+
+@extend_schema(
+    tags=["Admin - Products"],
+    summary="Retrieve / update / delete a brand",
+)
+class AdminBrandRetrieveUpdateDestroyAPIView(
+    generics.RetrieveUpdateDestroyAPIView
+):
+
+    serializer_class = AdminBrandSerializer
+
+    permission_classes = [IsAdminUser]
+
+    parser_classes = (
+        MultiPartParser,
+        FormParser,
+    )
+
+    queryset = (
+        Brand.objects
+        .annotate(
+            product_count=Count("products")
+        )
+    )

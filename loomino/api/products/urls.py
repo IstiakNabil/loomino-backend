@@ -23,6 +23,10 @@ from .views import (
     AdminCategoryRetrieveUpdateDestroyAPIView,
     AdminProductVariantListCreateAPIView,
     AdminProductVariantRetrieveUpdateDestroyAPIView,
+    AdminProductImageListCreateAPIView,
+    AdminProductImageRetrieveUpdateDestroyAPIView,
+    AdminBrandListCreateAPIView,
+    AdminBrandRetrieveUpdateDestroyAPIView,
 )
 
 
@@ -169,6 +173,38 @@ urlpatterns = [
         AdminProductVariantRetrieveUpdateDestroyAPIView.as_view(),
         name="admin-product-variant-detail",
     ),
+    # ========================================================
+    # Admin — Product Images
+    # ========================================================
+
+    path(
+        "images/admin/",
+        AdminProductImageListCreateAPIView.as_view(),
+        name="admin-product-image-list-create",
+    ),
+
+    path(
+        "images/admin/<int:pk>/",
+        AdminProductImageRetrieveUpdateDestroyAPIView.as_view(),
+        name="admin-product-image-detail",
+    ),
+
+    # ========================================================
+    # Admin — Brands
+    # ========================================================
+
+    path(
+        "brands/manage/",
+        AdminBrandListCreateAPIView.as_view(),
+        name="admin-brand-list-create",
+    ),
+
+    path(
+        "brands/manage/<int:pk>/",
+        AdminBrandRetrieveUpdateDestroyAPIView.as_view(),
+        name="admin-brand-detail",
+    ),
+
     # ========================================================
     # Dynamic Product Slug Endpoints
     # Keep these last

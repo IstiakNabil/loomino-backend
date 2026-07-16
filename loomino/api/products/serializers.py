@@ -917,3 +917,161 @@ class AdminProductVariantWriteSerializer(
                 )
 
         return attrs
+
+# ============================================================
+# Admin — Product Images
+# ============================================================
+
+class AdminProductImageSerializer(
+    serializers.ModelSerializer
+):
+
+    image_url = serializers.SerializerMethodField()
+
+    product_name = serializers.CharField(
+        source="product.name",
+        read_only=True,
+    )
+
+    class Meta:
+
+        model = ProductImage
+
+        fields = (
+            "id",
+            "product",
+            "product_name",
+            "image",
+            "image_url",
+            "image_type",
+            "display_order",
+            "created_at",
+        )
+
+        read_only_fields = (
+            "id",
+            "product_name",
+            "image_url",
+            "created_at",
+        )
+
+        extra_kwargs = {
+
+            "image_type": {
+                "required": False,
+            },
+
+            "display_order": {
+                "required": False,
+            },
+
+        }
+
+    def get_image_url(self, obj):
+
+        if not obj.image:
+            return None
+
+        request = self.context.get("request")
+
+        if request:
+            return request.build_absolute_uri(
+                obj.image.url
+            )
+
+        return obj.image.url
+
+
+# ============================================================
+# Admin — Brands
+# ============================================================
+
+class AdminBrandSerializer(serializers.ModelSerializer):
+
+    product_count = serializers.IntegerField(
+        read_only=True
+    )
+
+    logo_url = serializers.SerializerMethodField()
+
+    class Meta:
+
+        model = Brand
+
+        fields = (
+            "id",
+            "name",
+            "slug",
+            "logo",
+            "logo_url",
+            "description",
+            "is_active",
+            "product_count",
+            "created_at",
+            "updated_at",
+        )
+
+        read_only_fields = (
+            "id",
+            "slug",
+            "logo_url",
+            "product_count",
+            "created_at",
+            "updated_at",
+        )
+
+        extra_kwargs = {
+
+            "logo": {
+                "required": False,
+                "allow_null": True,
+            },
+
+            "description": {
+                "required": False,
+                "allow_blank": True,
+                "allow_null": True,
+            },
+
+            "is_active": {
+                "required": False,
+            },
+
+        }
+
+    def get_logo_url(self, obj):
+
+        if not obj.logo:
+            return None
+
+        request = self.context.get("request")
+
+        if request:
+            return request.build_absolute_uri(
+                obj.logo.url
+            )
+
+        return obj.logo.url
+
+    def validate_name(self, value):
+
+        value = value.strip()
+
+        if not value:
+            raise serializers.ValidationError(
+                "Brand name cannot be empty."
+            )
+
+        qs = Brand.objects.filter(
+            name__iexact=value
+        )
+
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.exists():
+            raise serializers.ValidationError(
+                "A brand with this name already exists."
+            )
+
+        return value
