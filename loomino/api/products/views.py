@@ -827,8 +827,18 @@ class AdminProductVariantListCreateAPIView(
     permission_classes = [IsAdminUser]
 
     filter_backends = (
+        DjangoFilterBackend,
         SearchFilter,
         OrderingFilter,
+    )
+
+    # Lets the admin panel load the variants belonging to a
+    # single product, e.g. ?product=12
+    filterset_fields = (
+        "product",
+        "color",
+        "size",
+        "is_active",
     )
 
     search_fields = (
