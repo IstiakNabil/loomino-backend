@@ -82,6 +82,8 @@ class TopProductSerializer(serializers.ModelSerializer):
 
 class DashboardCustomerSerializer(serializers.ModelSerializer):
 
+    location = serializers.SerializerMethodField()
+
     class Meta:
 
         model = User
@@ -96,6 +98,31 @@ class DashboardCustomerSerializer(serializers.ModelSerializer):
 
             "email",
 
+            "phone_number",
+
+            "location",
+
             "date_joined",
 
         )
+
+    def get_location(self, obj):
+
+        # Prefer the customer's default address; fall back to
+        # their most recently added one. Neither may exist yet
+        # for a brand-new account.
+        address = (
+            obj.addresses.filter(is_default=True).first()
+            or obj.addresses.order_by("-created_at").first()
+        )
+
+        if not address:
+            return None
+
+        parts = [
+            part
+            for part in (address.district, address.division)
+            if part
+        ]
+
+        return ", ".join(parts) if parts else None

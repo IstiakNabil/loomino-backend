@@ -40,6 +40,7 @@ class AdminCouponSerializer(serializers.ModelSerializer):
         max_digits=10,
         decimal_places=2,
         required=False,
+        allow_null=True,
     )
 
     expiry_date = serializers.DateTimeField(
@@ -148,7 +149,7 @@ class AdminCouponSerializer(serializers.ModelSerializer):
 
     def validate_cart_min_value(self, value):
 
-        if value < 0:
+        if value is not None and value < 0:
 
             raise serializers.ValidationError(
                 "Minimum cart value cannot be negative."

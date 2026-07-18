@@ -62,6 +62,18 @@ urlpatterns = [
     ),
 
     path(
+        "orders/admin/",
+        AdminOrderListAPIView.as_view(),
+        name="admin-order-list",
+    ),
+
+    path(
+        "orders/admin/<str:order_number>/",
+        AdminOrderDetailUpdateAPIView.as_view(),
+        name="admin-order-detail-update",
+    ),
+
+    path(
         "orders/<str:order_number>/",
         OrderDetailAPIView.as_view(),
         name="order-detail",
@@ -72,16 +84,4 @@ urlpatterns = [
         CancelOrderAPIView.as_view(),
         name="order-cancel",
     ),
-
-    path(
-    "admin/",
-    AdminOrderListAPIView.as_view(),
-    name="admin-order-list",
-),
-
-path(
-    "admin/<str:order_number>/",
-    AdminOrderDetailUpdateAPIView.as_view(),
-    name="admin-order-detail-update",
-),
 ]

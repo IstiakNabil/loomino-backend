@@ -181,7 +181,9 @@ class Address(models.Model):
     )
 
     area = models.CharField(
-        max_length=100
+        max_length=100,
+        blank=True,
+        default=""
     )
 
     postal_code = models.CharField(

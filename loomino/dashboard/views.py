@@ -1,4 +1,5 @@
 from django.db.models import Sum
+from django.utils import timezone
 from rest_framework import generics
 from .serializers import DashboardOrderSerializer
 from rest_framework.views import APIView
@@ -43,6 +44,18 @@ class DashboardStatsAPIView(APIView):
             )["total"] or 0
         )
 
+        todays_orders = Order.objects.filter(
+            created_at__date=timezone.localdate(),
+        ).exclude(
+            status="cancelled",
+        )
+
+        today_sales = (
+            todays_orders.aggregate(
+                total=Sum("total")
+            )["total"] or 0
+        )
+
         return Response({
 
             "total_users": User.objects.count(),
@@ -60,6 +73,10 @@ class DashboardStatsAPIView(APIView):
             ).count(),
 
             "total_sales": total_sales,
+
+            "today_sales": today_sales,
+
+            "today_orders": todays_orders.count(),
 
         })
 
@@ -194,6 +211,8 @@ class DashboardCustomerListAPIView(generics.ListAPIView):
 
     queryset = User.objects.order_by(
         "-date_joined"
+    ).prefetch_related(
+        "addresses"
     )[:20]
 
 @extend_schema(
