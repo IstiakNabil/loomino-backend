@@ -1,9 +1,9 @@
-django
-djangorestframework
-python-decouple
-djangorestframework-simplejwt
-django-filter
-drf-spectacular
-django-cors-headers
-psycopg2-binary
-Pillow
+pip install django
+python -m pip install djangorestframework
+python -m pip install python-decouple
+python -m pip install djangorestframework-simplejwt
+python -m pip install django-filter
+python -m pip install drf-spectacular
+python -m pip install django-cors-headers
+python -m pip install psycopg2-binary
+python -m pip install Pillow
