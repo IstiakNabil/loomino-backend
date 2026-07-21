@@ -7,4 +7,3 @@ drf-spectacular
 django-cors-headers
 psycopg2-binary
 Pillow
-gunicorn
