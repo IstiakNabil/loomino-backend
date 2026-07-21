@@ -31,26 +31,17 @@ class WishlistAPIView(APIView):
         )
 
         serializer = WishlistItemSerializer(
-
-            wishlist.items.select_related(
-
-                "product_variant",
-
-                "product_variant__product",
-
-                "product_variant__color",
-
-                "product_variant__size",
-
-            ).prefetch_related(
-
-                "product_variant__product__images",
-
-            ),
-
-            many=True,
-
-        )
+    		wishlist.items.select_related(
+      		 "product_variant",
+       		 "product_variant__product",
+       		 "product_variant__color",
+       		 "product_variant__size",
+   	 ).prefetch_related(
+        	"product_variant__product__images",
+   	 ),
+   	 many=True,
+   	 context={"request": request},	
+	)
 
         return Response(serializer.data)
 
