@@ -46,4 +46,9 @@ path(
     include("newsletter.urls"),
 ),
 
+path(
+    "cms/",
+    include("cms.urls"),
+),
+
 ]

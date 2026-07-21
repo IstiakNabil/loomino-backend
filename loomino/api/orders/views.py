@@ -14,6 +14,7 @@ from orders.models import (
     Address,
 )
 from orders.models import Payment
+from orders.emails import send_order_confirmation_email
 from products.models import ProductVariant
 from django.shortcuts import get_object_or_404
 from .serializers import (
@@ -453,16 +454,26 @@ class CheckoutAPIView(APIView):
 
             cart.items.all().delete()
 
-            return Response(
-                {
-                    "message": "Order created successfully.",
-                    "order_number": order.order_number,
-                    "order_id": order.id,
-                    "subtotal": subtotal,
-                    "total": total,
-                },
-                status=status.HTTP_201_CREATED,
-            )
+        # Sent after the transaction commits — if anything above
+        # had failed and rolled back, we don't want a
+        # confirmation email for an order that doesn't exist.
+        # Guarded so an SMTP hiccup can't turn an already-
+        # successful order into an error response.
+        try:
+            send_order_confirmation_email(order)
+        except Exception:
+            pass
+
+        return Response(
+            {
+                "message": "Order created successfully.",
+                "order_number": order.order_number,
+                "order_id": order.id,
+                "subtotal": subtotal,
+                "total": total,
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
 @extend_schema(
     tags=["Orders"],

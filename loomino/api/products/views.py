@@ -6,6 +6,7 @@ from django.db.models import (
     Sum,
 )
 from django.db.models.functions import Coalesce
+from django.db.models.deletion import ProtectedError
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -587,7 +588,28 @@ class AdminProductRetrieveUpdateDestroyAPIView(
                 )
             )
         )
-    
+
+    def destroy(self, request, *args, **kwargs):
+
+        try:
+            return super().destroy(
+                request, *args, **kwargs
+            )
+        except ProtectedError:
+            return Response(
+                {
+                    "detail": (
+                        "This product can't be deleted "
+                        "because it has order history "
+                        "(one or more of its variants "
+                        "appear on a past order). "
+                        "Deactivate it instead so past "
+                        "orders keep showing correct "
+                        "product details."
+                    )
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
 # ============================================================
 # ADMIN — Category List / Create
 # ============================================================
@@ -953,6 +975,27 @@ class AdminProductVariantRetrieveUpdateDestroyAPIView(
             return AdminProductVariantWriteSerializer
 
         return AdminProductVariantSerializer
+
+    def destroy(self, request, *args, **kwargs):
+
+        try:
+            return super().destroy(
+                request, *args, **kwargs
+            )
+        except ProtectedError:
+            return Response(
+                {
+                    "detail": (
+                        "This variant can't be deleted "
+                        "because it appears on a past "
+                        "order. Set its stock to 0 or "
+                        "deactivate it instead so past "
+                        "orders keep showing correct "
+                        "details."
+                    )
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
 
     def update(self, request, *args, **kwargs):
 

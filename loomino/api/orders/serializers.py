@@ -13,6 +13,7 @@ from orders.models import (
     Payment,
     Shipment,
 )
+from orders.emails import send_order_delivered_email
 class CartItemSerializer(serializers.ModelSerializer):
 
     product = serializers.CharField(
@@ -203,11 +204,7 @@ class CheckoutSerializer(serializers.Serializer):
     payment_method = serializers.ChoiceField(
         choices=[
             "cod",
-            "bkash",
-            "nagad",
-            "rocket",
             "sslcommerz",
-            "stripe",
         ]
     )
 
@@ -885,6 +882,8 @@ class AdminOrderUpdateSerializer(
 
         if order_status is not None:
 
+            previous_status = instance.status
+
             instance.status = order_status
 
             order_fields_to_update.append(
@@ -906,6 +905,18 @@ class AdminOrderUpdateSerializer(
             instance.save(
                 update_fields=order_fields_to_update
             )
+
+            if (
+                order_status == "delivered"
+                and previous_status != "delivered"
+            ):
+                # Guarded so an SMTP hiccup doesn't turn an
+                # otherwise-successful status update into a
+                # 500 for the admin.
+                try:
+                    send_order_delivered_email(instance)
+                except Exception:
+                    pass
 
         if any(
             value is not None
