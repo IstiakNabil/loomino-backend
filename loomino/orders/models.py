@@ -221,11 +221,7 @@ class OrderItem(models.Model):
 class Payment(models.Model):
     PAYMENT_METHODS = (
         ("cod", "Cash on Delivery"),
-        ("bkash", "bKash"),
-        ("nagad", "Nagad"),
-        ("rocket", "Rocket"),
-        ("sslcommerz", "SSLCommerz"),
-        ("stripe", "Stripe"),
+        ("sslcommerz", "SSL Gateway"),
     )
 
     PAYMENT_STATUS = (
