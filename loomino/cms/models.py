@@ -76,7 +76,19 @@ class SiteBanner(models.Model):
     KEY_HERO_SLIDE_2 = "hero_slide_2"
     KEY_HERO_SLIDE_3 = "hero_slide_3"
 
+    # Same 3 hero slides, but a separate image slot each admins
+    # can use to crop for phone screens instead of the desktop
+    # photo getting awkwardly cropped by object-cover. Optional
+    # — the storefront falls back to the desktop image on
+    # mobile if these aren't set.
+    KEY_HERO_SLIDE_1_MOBILE = "hero_slide_1_mobile"
+    KEY_HERO_SLIDE_2_MOBILE = "hero_slide_2_mobile"
+    KEY_HERO_SLIDE_3_MOBILE = "hero_slide_3_mobile"
+
     KEY_MODIWEEK_FEATURE = "modiweek_feature"
+
+    KEY_SHOP_HERO = "shop_hero"
+    KEY_SHOP_HERO_MOBILE = "shop_hero_mobile"
 
     KEY_SUSTAINABILITY_HERO = "sustainability_hero"
     KEY_SUSTAINABILITY_PROCESSING = "sustainability_processing"
@@ -111,7 +123,15 @@ class SiteBanner(models.Model):
         (KEY_HERO_SLIDE_1, "Hero — Slide 1"),
         (KEY_HERO_SLIDE_2, "Hero — Slide 2"),
         (KEY_HERO_SLIDE_3, "Hero — Slide 3"),
+        (KEY_HERO_SLIDE_1_MOBILE, "Hero — Slide 1 (Mobile)"),
+        (KEY_HERO_SLIDE_2_MOBILE, "Hero — Slide 2 (Mobile)"),
+        (KEY_HERO_SLIDE_3_MOBILE, "Hero — Slide 3 (Mobile)"),
         (KEY_MODIWEEK_FEATURE, "Modiweek — Feature Look"),
+        (KEY_SHOP_HERO, "Shop All — Hero Banner"),
+        (
+            KEY_SHOP_HERO_MOBILE,
+            "Shop All — Hero Banner (Mobile)",
+        ),
         (
             KEY_SUSTAINABILITY_HERO,
             "Sustainability — Hero Image",
