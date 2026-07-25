@@ -70,6 +70,11 @@ class CartItemSerializer(serializers.ModelSerializer):
 
         if image:
 
+            request = self.context.get("request")
+
+            if request:
+                return request.build_absolute_uri(image.image.url)
+
             return image.image.url
 
         return None

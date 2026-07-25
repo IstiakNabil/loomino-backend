@@ -84,6 +84,7 @@ class CartAPIView(APIView):
         serializer = CartItemSerializer(
             items,
             many=True,
+	    context={"request": request},
         )
 
         total_items = items.aggregate(
