@@ -71,6 +71,34 @@ def send_order_confirmation_email(order):
         recipient_list=[order.user.email],
     )
 
+    # Also notify the store's admin notification address, if set
+    # in Site Settings, so the owner hears about every new order.
+    from sitesettings.models import SiteSetting
+
+    admin_email = SiteSetting.load().admin_notification_email
+    if admin_email:
+        admin_message = (
+            f"New order placed.\n\n"
+            f"Order Number: {order.order_number}\n"
+            f"Customer: {order.user.first_name} "
+            f"{order.user.last_name} ({order.user.email})\n"
+            f"Placed On: "
+            f"{order.created_at.strftime('%B %d, %Y')}\n\n"
+            f"Items:\n{_format_items(order)}\n\n"
+            f"Total: {format_currency(order.total)}\n\n"
+            f"Shipping Address:\n"
+            f"{_format_address(order.shipping_address)}\n"
+        )
+        send_mail(
+            subject=(
+                f"New Order — {order.order_number}"
+            ),
+            message=admin_message,
+            from_email=None,
+            recipient_list=[admin_email],
+            fail_silently=True,
+        )
+
 
 def send_order_delivered_email(order):
     """Sent when an admin marks the order as Delivered."""

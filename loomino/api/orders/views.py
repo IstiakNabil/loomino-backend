@@ -27,6 +27,7 @@ OrderDetailSerializer,
 
 )
 from coupons.models import Coupon, CouponUsage
+from sitesettings.models import SiteSetting
 from django.utils import timezone
 from django.db.models import Sum, F, DecimalField
 from django.db.models.functions import Coalesce
@@ -309,7 +310,7 @@ class CheckoutAPIView(APIView):
                     item.product_variant.selling_price * item.quantity
             )
 
-        shipping_cost = Decimal("0.00")
+        shipping_cost = SiteSetting.load().delivery_charge
 
         discount = Decimal("0.00")
 

@@ -51,4 +51,9 @@ path(
     include("cms.urls"),
 ),
 
+path(
+    "",
+    include("sitesettings.urls"),
+),
+
 ]
