@@ -11,7 +11,15 @@ class PublicSiteBannerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SiteBanner
-        fields = ("key", "label", "image")
+        fields = (
+            "key",
+            "label",
+            "image",
+            "eyebrow",
+            "heading",
+            "body",
+            "cta_label",
+        )
 
 
 class AdminSiteBannerSerializer(serializers.ModelSerializer):
@@ -22,7 +30,17 @@ class AdminSiteBannerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SiteBanner
-        fields = ("id", "key", "label", "image", "updated_at")
+        fields = (
+            "id",
+            "key",
+            "label",
+            "image",
+            "eyebrow",
+            "heading",
+            "body",
+            "cta_label",
+            "updated_at",
+        )
         read_only_fields = ("id", "key", "updated_at")
 
 

@@ -58,12 +58,17 @@ class OfferBanner(models.Model):
 
 class SiteBanner(models.Model):
     """
-    A single, fixed-slot image used on the storefront (e.g. the
-    Collection tile photos, the Sustainability banner). Unlike
-    HeroSection/OfferBanner these aren't freely created and
-    deleted — `key` is one of a known, hardcoded set that
-    corresponds to a specific spot in the frontend layout. The
-    admin only ever replaces the image for an existing slot.
+    A single, fixed-slot piece of managed content on the
+    storefront (e.g. the Collection tile photos, the Our Story
+    band). Unlike HeroSection/OfferBanner these aren't freely
+    created and deleted — `key` is one of a known, hardcoded set
+    that corresponds to a specific spot in the frontend layout.
+
+    Most slots are image-only. A few (like the Our Story band)
+    also carry editable text via the optional `eyebrow`,
+    `heading`, `body` and `cta_label` fields, so admins can edit
+    the copy from the same panel without a code change. Unused
+    text fields simply stay blank.
     """
 
     KEY_COLLECTION_KURTI = "collection_kurti"
@@ -71,6 +76,10 @@ class SiteBanner(models.Model):
     KEY_COLLECTION_SAREE = "collection_saree"
     KEY_COLLECTION_KAMEEZ = "collection_kameez"
     KEY_SUSTAINABILITY = "sustainability"
+
+    # Homepage "Our Story" band — background image plus editable
+    # text (eyebrow / heading / body / cta_label).
+    KEY_OUR_STORY = "our_story"
 
     KEY_HERO_SLIDE_1 = "hero_slide_1"
     KEY_HERO_SLIDE_2 = "hero_slide_2"
@@ -120,6 +129,7 @@ class SiteBanner(models.Model):
         (KEY_COLLECTION_SAREE, "Collection — Saree"),
         (KEY_COLLECTION_KAMEEZ, "Collection — Kameez"),
         (KEY_SUSTAINABILITY, "Sustainability Banner"),
+        (KEY_OUR_STORY, "Our Story — Homepage Band"),
         (KEY_HERO_SLIDE_1, "Hero — Slide 1"),
         (KEY_HERO_SLIDE_2, "Hero — Slide 2"),
         (KEY_HERO_SLIDE_3, "Hero — Slide 3"),
@@ -225,6 +235,13 @@ class SiteBanner(models.Model):
         blank=True,
         null=True,
     )
+
+    # Optional editable copy — only used by text-carrying slots
+    # such as the Our Story band; blank for image-only slots.
+    eyebrow = models.CharField(max_length=120, blank=True)
+    heading = models.CharField(max_length=200, blank=True)
+    body = models.TextField(blank=True)
+    cta_label = models.CharField(max_length=80, blank=True)
 
     updated_at = models.DateTimeField(
         auto_now=True,
