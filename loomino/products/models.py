@@ -80,20 +80,38 @@ class Category(models.Model):
 
         return self.name
 
-class Brand(models.Model):
+class ProductType(models.Model):
+    """
+    A clothing/accessory type (e.g. "Shirt", "Jeans", "Punjabi").
+    Was originally "Brand" — renamed in place, keeping all
+    existing rows, when the storefront filter switched from
+    brand-based to type-based browsing.
+
+    A Type can belong to multiple Categories (e.g. "Jeans"
+    under both Men and Women), which drives the Shop All
+    filter: with no Category selected, all Types show; once a
+    Category is selected, only Types linked to it show.
+    """
+
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=120, unique=True, blank=True)
     logo = models.ImageField(upload_to="brands/", blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
+    categories = models.ManyToManyField(
+        Category,
+        blank=True,
+        related_name="types",
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
-        verbose_name = "Brand"
-        verbose_name_plural = "Brands"
+        verbose_name = "Type"
+        verbose_name_plural = "Types"
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -145,8 +163,8 @@ class Product(models.Model):
         related_name="products"
     )
 
-    brand = models.ForeignKey(
-        Brand,
+    product_type = models.ForeignKey(
+        ProductType,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

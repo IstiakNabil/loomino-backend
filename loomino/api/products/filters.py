@@ -5,7 +5,7 @@ from django.db.models import Q
 from products.models import (
     Product,
     Category,
-    Brand,
+    ProductType,
 )
 
 
@@ -19,11 +19,11 @@ class ProductFilter(django_filters.FilterSet):
         to_field_name="slug",
     )
 
-    brand = django_filters.ModelChoiceFilter(
-        queryset=Brand.objects.filter(
+    product_type = django_filters.ModelChoiceFilter(
+        queryset=ProductType.objects.filter(
             is_active=True,
         ),
-        field_name="brand",
+        field_name="product_type",
         to_field_name="slug",
     )
 
@@ -49,7 +49,7 @@ class ProductFilter(django_filters.FilterSet):
 
         fields = (
             "category",
-            "brand",
+            "product_type",
             "is_featured",
             "is_new_arrival",
             "is_on_sale",

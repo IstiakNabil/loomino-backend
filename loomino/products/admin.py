@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Category,
-    Brand,
+    ProductType,
     Color,
     Size,
     Product,
@@ -24,14 +24,15 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 # ==========================
-# Brand
+# Product Type
 # ==========================
 
-@admin.register(Brand)
-class BrandAdmin(admin.ModelAdmin):
+@admin.register(ProductType)
+class ProductTypeAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "is_active")
     search_fields = ("name",)
-    list_filter = ("is_active",)
+    list_filter = ("is_active", "categories")
+    filter_horizontal = ("categories",)
     prepopulated_fields = {"slug": ("name",)}
 
 
@@ -77,7 +78,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = (
     "name",
     "category",
-    "brand",
+    "product_type",
     "regular_price",
     "discount_price",
     "is_featured",
@@ -88,7 +89,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     list_filter = (
     "category",
-    "brand",
+    "product_type",
     "is_featured",
     "is_new_arrival",
     "is_on_sale",
@@ -105,7 +106,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     fields = (
         "category",
-        "brand",
+        "product_type",
         "name",
         "slug",
         "short_description",

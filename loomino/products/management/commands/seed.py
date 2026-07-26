@@ -14,7 +14,7 @@ from products.models import (
     ProductImage,
     ProductVariant,
     Category,
-    Brand,
+    ProductType,
     Color,
     Size,
 )
@@ -24,7 +24,7 @@ class Command(BaseCommand):
     def seed_products(self):
 
         category = list(Category.objects.all())
-        brands = list(Brand.objects.all())
+        types = list(ProductType.objects.all())
         colors = list(Color.objects.all())
         sizes = list(Size.objects.all())
 
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 defaults={
                     "name": name,
                     "category": random.choice(category),
-                    "brand": random.choice(brands),
+                    "product_type": random.choice(types),
                     "short_description": f"{name} short description.",
                     "description": f"This is a premium quality {name.lower()}.",
                     "regular_price": Decimal(random.randint(1200, 4500)),
@@ -110,7 +110,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING("Starting database seeding...\n"))
 
         self.seed_categories()
-        self.seed_brands()
+        self.seed_types()
         self.seed_colors()
         self.seed_sizes()
 
@@ -150,29 +150,30 @@ class Command(BaseCommand):
             self.style.SUCCESS("✓ Categories created")
         )
 
-    def seed_brands(self):
+    def seed_types(self):
 
-        brands = [
-            "Loomino",
-            "Nike",
-            "Adidas",
-            "Puma",
-            "Zara",
-            "H&M",
-            "Levi's",
+        types = [
+            "Kurti",
+            "Saree",
+            "Shrug",
+            "Kameez",
+            "Punjabi",
+            "Shirt",
+            "Jeans",
+            "Blazer",
         ]
 
-        for brand in brands:
+        for type_name in types:
 
-            Brand.objects.get_or_create(
-                name=brand,
+            ProductType.objects.get_or_create(
+                name=type_name,
                 defaults={
-                    "description": f"{brand} brand",
+                    "description": f"{type_name} type",
                 },
             )
 
         self.stdout.write(
-            self.style.SUCCESS("✓ Brands created")
+            self.style.SUCCESS("✓ Types created")
         )
 
     def seed_colors(self):

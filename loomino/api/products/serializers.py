@@ -6,7 +6,7 @@ from products.models import (
     ProductImage,
     ProductVariant,
     Category,
-    Brand,
+    ProductType,
     Color,
     Size,
 )
@@ -32,8 +32,8 @@ class ProductListSerializer(serializers.ModelSerializer):
         source="category.name"
     )
 
-    brand = serializers.CharField(
-        source="brand.name",
+    product_type = serializers.CharField(
+        source="product_type.name",
         default=None
     )
 
@@ -53,7 +53,7 @@ class ProductListSerializer(serializers.ModelSerializer):
             "price",
             "thumbnail",
             "category",
-            "brand",
+            "product_type",
             "is_featured",
             "is_new_arrival",
             "in_stock",
@@ -162,17 +162,17 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 # ============================================================
-# Public Brands
+# Public Types
 # ============================================================
 
-class BrandSerializer(serializers.ModelSerializer):
+class TypeSerializer(serializers.ModelSerializer):
 
     product_count = serializers.IntegerField(
         read_only=True
     )
 
     class Meta:
-        model = Brand
+        model = ProductType
 
         fields = (
             "id",
@@ -271,8 +271,8 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         source="category.name"
     )
 
-    brand = serializers.CharField(
-        source="brand.name",
+    product_type = serializers.CharField(
+        source="product_type.name",
         default=None
     )
 
@@ -301,7 +301,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "regular_price",
             "discount_price",
             "category",
-            "brand",
+            "product_type",
             "is_featured",
             "is_new_arrival",
             "is_on_sale",
@@ -399,8 +399,8 @@ class AdminProductSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
-    brand_name = serializers.CharField(
-        source="brand.name",
+    type_name = serializers.CharField(
+        source="product_type.name",
         read_only=True,
     )
 
@@ -423,8 +423,8 @@ class AdminProductSerializer(serializers.ModelSerializer):
             "category",
             "category_name",
 
-            "brand",
-            "brand_name",
+            "product_type",
+            "type_name",
 
             "short_description",
             "description",
@@ -450,7 +450,7 @@ class AdminProductSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "id",
             "category_name",
-            "brand_name",
+            "type_name",
             "thumbnail",
             "total_stock",
             "created_at",
@@ -983,10 +983,10 @@ class AdminProductImageSerializer(
 
 
 # ============================================================
-# Admin — Brands
+# Admin — Types
 # ============================================================
 
-class AdminBrandSerializer(serializers.ModelSerializer):
+class AdminTypeSerializer(serializers.ModelSerializer):
 
     product_count = serializers.IntegerField(
         read_only=True
@@ -994,9 +994,15 @@ class AdminBrandSerializer(serializers.ModelSerializer):
 
     logo_url = serializers.SerializerMethodField()
 
+    categories = serializers.PrimaryKeyRelatedField(
+        many=True,
+        required=False,
+        queryset=Category.objects.all(),
+    )
+
     class Meta:
 
-        model = Brand
+        model = ProductType
 
         fields = (
             "id",
@@ -1006,6 +1012,7 @@ class AdminBrandSerializer(serializers.ModelSerializer):
             "logo_url",
             "description",
             "is_active",
+            "categories",
             "product_count",
             "created_at",
             "updated_at",
@@ -1059,10 +1066,10 @@ class AdminBrandSerializer(serializers.ModelSerializer):
 
         if not value:
             raise serializers.ValidationError(
-                "Brand name cannot be empty."
+                "Type name cannot be empty."
             )
 
-        qs = Brand.objects.filter(
+        qs = ProductType.objects.filter(
             name__iexact=value
         )
 
@@ -1071,7 +1078,7 @@ class AdminBrandSerializer(serializers.ModelSerializer):
 
         if qs.exists():
             raise serializers.ValidationError(
-                "A brand with this name already exists."
+                "A type with this name already exists."
             )
 
         return value

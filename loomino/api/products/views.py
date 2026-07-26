@@ -36,7 +36,7 @@ from products.models import (
     ProductImage,
     ProductVariant,
     Category,
-    Brand,
+    ProductType,
     Color,
     Size,
 )
@@ -47,7 +47,7 @@ from .serializers import (
     ProductListSerializer,
     ProductDetailSerializer,
     CategorySerializer,
-    BrandSerializer,
+    TypeSerializer,
     ColorSerializer,
     SizeSerializer,
     AdminProductListSerializer,
@@ -57,7 +57,7 @@ from .serializers import (
     AdminSizeSerializer,
     AdminProductVariantSerializer,
     AdminProductImageSerializer,
-    AdminBrandSerializer,
+    AdminTypeSerializer,
     AdminProductVariantWriteSerializer,
 )
 
@@ -86,7 +86,7 @@ class ProductListAPIView(generics.ListAPIView):
         )
         .select_related(
             "category",
-            "brand",
+            "product_type",
         )
         .prefetch_related(
             "images",
@@ -161,7 +161,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
         )
         .select_related(
             "category",
-            "brand",
+            "product_type",
         )
         .prefetch_related(
             "images",
@@ -219,30 +219,43 @@ class CategoryListAPIView(generics.ListAPIView):
 
 
 # ============================================================
-# Public — Brands
+# Public — Types
 # ============================================================
 
 @extend_schema(
     tags=["Products"],
-    summary="List Brands",
-    description="Returns all active product brands.",
+    summary="List Types",
+    description=(
+        "Returns all active product types. Pass "
+        "?category=<slug> to only return types linked to "
+        "that category; with no category, all types are "
+        "returned."
+    ),
 )
-class BrandListAPIView(generics.ListAPIView):
+class TypeListAPIView(generics.ListAPIView):
 
-    serializer_class = BrandSerializer
+    serializer_class = TypeSerializer
 
     permission_classes = [AllowAny]
 
-    queryset = (
-        Brand.objects.filter(
+    def get_queryset(self):
+        queryset = ProductType.objects.filter(
             is_active=True
-        )
-        .annotate(
+        ).annotate(
             product_count=Count(
                 "products"
             )
         )
-    )
+
+        category_slug = self.request.query_params.get(
+            "category"
+        )
+        if category_slug:
+            queryset = queryset.filter(
+                categories__slug=category_slug
+            )
+
+        return queryset.distinct()
 
 
 # ============================================================
@@ -312,7 +325,7 @@ class FeaturedProductAPIView(generics.ListAPIView):
         )
         .select_related(
             "category",
-            "brand",
+            "product_type",
         )
         .prefetch_related(
             "images",
@@ -338,7 +351,7 @@ class NewArrivalProductAPIView(generics.ListAPIView):
         )
         .select_related(
             "category",
-            "brand",
+            "product_type",
         )
         .prefetch_related(
             "images",
@@ -368,7 +381,7 @@ class BestSellerProductAPIView(generics.ListAPIView):
         )
         .select_related(
             "category",
-            "brand",
+            "product_type",
         )
         .prefetch_related(
             "images",
@@ -413,7 +426,7 @@ class RelatedProductAPIView(generics.ListAPIView):
             )
             .select_related(
                 "category",
-                "brand",
+                "product_type",
             )
             .prefetch_related(
                 "images",
@@ -447,7 +460,7 @@ class OnSaleProductAPIView(generics.ListAPIView):
         )
         .select_related(
             "category",
-            "brand",
+            "product_type",
         )
         .prefetch_related(
             "images",
@@ -521,7 +534,7 @@ class AdminProductListCreateAPIView(
             Product.objects.all()
             .select_related(
                 "category",
-                "brand",
+                "product_type",
             )
             .prefetch_related(
                 "images",
@@ -573,7 +586,7 @@ class AdminProductRetrieveUpdateDestroyAPIView(
             Product.objects.all()
             .select_related(
                 "category",
-                "brand",
+                "product_type",
             )
             .prefetch_related(
                 "images",
@@ -1111,18 +1124,18 @@ class AdminProductImageRetrieveUpdateDestroyAPIView(
 
 
 # ============================================================
-# Admin — Brands
+# Admin — Types
 # ============================================================
 
 @extend_schema(
     tags=["Admin - Products"],
-    summary="List / create brands",
+    summary="List / create types",
 )
-class AdminBrandListCreateAPIView(
+class AdminTypeListCreateAPIView(
     generics.ListCreateAPIView
 ):
 
-    serializer_class = AdminBrandSerializer
+    serializer_class = AdminTypeSerializer
 
     permission_classes = [IsAdminUser]
 
@@ -1149,7 +1162,7 @@ class AdminBrandListCreateAPIView(
     ordering = ("name",)
 
     queryset = (
-        Brand.objects
+        ProductType.objects
         .annotate(
             product_count=Count("products")
         )
@@ -1158,13 +1171,13 @@ class AdminBrandListCreateAPIView(
 
 @extend_schema(
     tags=["Admin - Products"],
-    summary="Retrieve / update / delete a brand",
+    summary="Retrieve / update / delete a type",
 )
-class AdminBrandRetrieveUpdateDestroyAPIView(
+class AdminTypeRetrieveUpdateDestroyAPIView(
     generics.RetrieveUpdateDestroyAPIView
 ):
 
-    serializer_class = AdminBrandSerializer
+    serializer_class = AdminTypeSerializer
 
     permission_classes = [IsAdminUser]
 
@@ -1174,7 +1187,7 @@ class AdminBrandRetrieveUpdateDestroyAPIView(
     )
 
     queryset = (
-        Brand.objects
+        ProductType.objects
         .annotate(
             product_count=Count("products")
         )

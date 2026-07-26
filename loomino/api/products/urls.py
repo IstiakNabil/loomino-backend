@@ -4,7 +4,7 @@ from .views import (
     ProductListAPIView,
     ProductDetailAPIView,
     CategoryListAPIView,
-    BrandListAPIView,
+    TypeListAPIView,
     FeaturedProductAPIView,
     NewArrivalProductAPIView,
     BestSellerProductAPIView,
@@ -25,8 +25,8 @@ from .views import (
     AdminProductVariantRetrieveUpdateDestroyAPIView,
     AdminProductImageListCreateAPIView,
     AdminProductImageRetrieveUpdateDestroyAPIView,
-    AdminBrandListCreateAPIView,
-    AdminBrandRetrieveUpdateDestroyAPIView,
+    AdminTypeListCreateAPIView,
+    AdminTypeRetrieveUpdateDestroyAPIView,
 )
 
 
@@ -73,9 +73,9 @@ urlpatterns = [
     ),
 
     path(
-        "brands/",
-        BrandListAPIView.as_view(),
-        name="brand-list",
+        "types/",
+        TypeListAPIView.as_view(),
+        name="type-list",
     ),
 
     path(
@@ -190,19 +190,19 @@ urlpatterns = [
     ),
 
     # ========================================================
-    # Admin — Brands
+    # Admin — Types
     # ========================================================
 
     path(
-        "brands/manage/",
-        AdminBrandListCreateAPIView.as_view(),
-        name="admin-brand-list-create",
+        "types/manage/",
+        AdminTypeListCreateAPIView.as_view(),
+        name="admin-type-list-create",
     ),
 
     path(
-        "brands/manage/<int:pk>/",
-        AdminBrandRetrieveUpdateDestroyAPIView.as_view(),
-        name="admin-brand-detail",
+        "types/manage/<int:pk>/",
+        AdminTypeRetrieveUpdateDestroyAPIView.as_view(),
+        name="admin-type-detail",
     ),
 
     # ========================================================
