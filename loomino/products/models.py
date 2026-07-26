@@ -195,7 +195,7 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
     is_new_arrival = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_modiweek = models.BooleanField(
+    is_on_sale = models.BooleanField(
     default=False
      )
     created_at = models.DateTimeField(auto_now_add=True)

@@ -82,7 +82,7 @@ class ProductAdmin(admin.ModelAdmin):
     "discount_price",
     "is_featured",
     "is_new_arrival",
-    "is_modiweek",
+    "is_on_sale",
     "is_active",
     )
 
@@ -91,7 +91,7 @@ class ProductAdmin(admin.ModelAdmin):
     "brand",
     "is_featured",
     "is_new_arrival",
-    "is_modiweek",
+    "is_on_sale",
     "is_active",
     )
 

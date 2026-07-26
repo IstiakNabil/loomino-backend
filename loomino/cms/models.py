@@ -94,7 +94,16 @@ class SiteBanner(models.Model):
     KEY_HERO_SLIDE_2_MOBILE = "hero_slide_2_mobile"
     KEY_HERO_SLIDE_3_MOBILE = "hero_slide_3_mobile"
 
-    KEY_MODIWEEK_FEATURE = "modiweek_feature"
+    KEY_ON_SALE_FEATURE = "on_sale_feature"
+
+    # Homepage "Loomino Community" collage — 5 photos.
+    # Slide 1 is the large image (desktop only); 2-5 are the
+    # 2x2 grid on desktop / the 2x2 mobile collage.
+    KEY_COMMUNITY_1 = "community_1"
+    KEY_COMMUNITY_2 = "community_2"
+    KEY_COMMUNITY_3 = "community_3"
+    KEY_COMMUNITY_4 = "community_4"
+    KEY_COMMUNITY_5 = "community_5"
 
     KEY_SHOP_HERO = "shop_hero"
     KEY_SHOP_HERO_MOBILE = "shop_hero_mobile"
@@ -118,8 +127,8 @@ class SiteBanner(models.Model):
     KEY_MEGAMENU_NEW_IN_1 = "megamenu_new_in_1"
     KEY_MEGAMENU_NEW_IN_2 = "megamenu_new_in_2"
     KEY_MEGAMENU_NEW_IN_3 = "megamenu_new_in_3"
-    KEY_MEGAMENU_MODIWEEK_1 = "megamenu_modiweek_1"
-    KEY_MEGAMENU_MODIWEEK_2 = "megamenu_modiweek_2"
+    KEY_MEGAMENU_ON_SALE_1 = "megamenu_on_sale_1"
+    KEY_MEGAMENU_ON_SALE_2 = "megamenu_on_sale_2"
     KEY_MEGAMENU_SUSTAINABILITY_1 = "megamenu_sustainability_1"
     KEY_MEGAMENU_SUSTAINABILITY_2 = "megamenu_sustainability_2"
 
@@ -136,7 +145,12 @@ class SiteBanner(models.Model):
         (KEY_HERO_SLIDE_1_MOBILE, "Hero — Slide 1 (Mobile)"),
         (KEY_HERO_SLIDE_2_MOBILE, "Hero — Slide 2 (Mobile)"),
         (KEY_HERO_SLIDE_3_MOBILE, "Hero — Slide 3 (Mobile)"),
-        (KEY_MODIWEEK_FEATURE, "Modiweek — Feature Look"),
+        (KEY_ON_SALE_FEATURE, "On Sale — Feature Look"),
+        (KEY_COMMUNITY_1, "Loomino Community — Photo 1 (Large)"),
+        (KEY_COMMUNITY_2, "Loomino Community — Photo 2"),
+        (KEY_COMMUNITY_3, "Loomino Community — Photo 3"),
+        (KEY_COMMUNITY_4, "Loomino Community — Photo 4"),
+        (KEY_COMMUNITY_5, "Loomino Community — Photo 5"),
         (KEY_SHOP_HERO, "Shop All — Hero Banner"),
         (
             KEY_SHOP_HERO_MOBILE,
@@ -207,12 +221,12 @@ class SiteBanner(models.Model):
             "Mega Menu — New In Tile 3",
         ),
         (
-            KEY_MEGAMENU_MODIWEEK_1,
-            "Mega Menu — Modiweek Tile 1",
+            KEY_MEGAMENU_ON_SALE_1,
+            "Mega Menu — On Sale Tile 1",
         ),
         (
-            KEY_MEGAMENU_MODIWEEK_2,
-            "Mega Menu — Modiweek Tile 2",
+            KEY_MEGAMENU_ON_SALE_2,
+            "Mega Menu — On Sale Tile 2",
         ),
         (
             KEY_MEGAMENU_SUSTAINABILITY_1,

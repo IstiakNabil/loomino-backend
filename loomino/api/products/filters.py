@@ -52,7 +52,7 @@ class ProductFilter(django_filters.FilterSet):
             "brand",
             "is_featured",
             "is_new_arrival",
-            "is_modiweek",
+            "is_on_sale",
         )
 
     def filter_sizes(self, queryset, name, value):

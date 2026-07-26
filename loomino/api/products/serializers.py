@@ -57,7 +57,7 @@ class ProductListSerializer(serializers.ModelSerializer):
             "is_featured",
             "is_new_arrival",
             "in_stock",
-            "is_modiweek",
+            "is_on_sale",
             "default_variant_id",
             "average_rating",
             "review_count",
@@ -304,7 +304,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             "brand",
             "is_featured",
             "is_new_arrival",
-            "is_modiweek",
+            "is_on_sale",
             "average_rating",
             "review_count",
             "images",
@@ -437,7 +437,7 @@ class AdminProductSerializer(serializers.ModelSerializer):
 
             "is_featured",
             "is_new_arrival",
-            "is_modiweek",
+            "is_on_sale",
             "is_active",
 
             "thumbnail",

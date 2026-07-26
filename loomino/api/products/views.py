@@ -423,18 +423,18 @@ class RelatedProductAPIView(generics.ListAPIView):
 
 
 # ============================================================
-# Public — Modiweek
+# Public — On Sale
 # ============================================================
 
 @extend_schema(
     tags=["Products"],
-    summary="List Modiweek Products",
+    summary="List On Sale Products",
     description=(
         "Returns active products selected "
-        "for the Modiweek collection."
+        "for the On Sale collection."
     ),
 )
-class ModiweekProductAPIView(generics.ListAPIView):
+class OnSaleProductAPIView(generics.ListAPIView):
 
     serializer_class = ProductListSerializer
 
@@ -443,7 +443,7 @@ class ModiweekProductAPIView(generics.ListAPIView):
     queryset = (
         Product.objects.filter(
             is_active=True,
-            is_modiweek=True,
+            is_on_sale=True,
         )
         .select_related(
             "category",

@@ -11,7 +11,7 @@ from .views import (
     RelatedProductAPIView,
     ColorListAPIView,
     SizeListAPIView,
-    ModiweekProductAPIView,
+    OnSaleProductAPIView,
     AdminColorListCreateAPIView,
     AdminColorRetrieveUpdateDestroyAPIView,
     AdminProductListCreateAPIView,
@@ -61,9 +61,9 @@ urlpatterns = [
     ),
 
     path(
-        "modiweek/",
-        ModiweekProductAPIView.as_view(),
-        name="modiweek-products",
+        "on-sale/",
+        OnSaleProductAPIView.as_view(),
+        name="on-sale-products",
     ),
 
     path(
