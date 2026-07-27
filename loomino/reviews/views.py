@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from orders.models import OrderItem
 from products.models import Product
@@ -102,6 +103,12 @@ class CreateReviewAPIView(APIView):
 class ProductReviewListAPIView(generics.ListAPIView):
 
     serializer_class = ReviewSerializer
+
+    # The project's DRF default is IsAuthenticated — this view
+    # needs to stay public even for guests, or the storefront's
+    # global 401-refresh interceptor force-redirects a guest to
+    # /login the moment reviews load on a product page.
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
 
